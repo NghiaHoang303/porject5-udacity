@@ -10,13 +10,17 @@ import {
   Header,
   Icon,
   Input,
-  Image,
+  // Image,
   Loader
 } from 'semantic-ui-react'
 
 import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
+import './styles.css'
+
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface TodosProps {
   auth: Auth
@@ -45,12 +49,23 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   }
 
   onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+    const notify = () => toast.success('🎉 Create Todo Success 🎉', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
     try {
       const dueDate = this.calculateDueDate()
       const newTodo = await createTodo(this.props.auth.getIdToken(), {
         name: this.state.newTodoName,
         dueDate
       })
+      await notify();
       this.setState({
         todos: [...this.state.todos, newTodo],
         newTodoName: ''
@@ -59,31 +74,58 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       alert('Todo creation failed')
     }
   }
-
   onTodoDelete = async (todoId: string) => {
+    const notify = () => toast.success('🦄 Delete Success', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+    console.log("aaaa")
     try {
-      await deleteTodo(this.props.auth.getIdToken(), todoId)
+      await deleteTodo(this.props.auth.getIdToken(), todoId);
+      await notify();
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId !== todoId)
+        todos: this.state.todos.filter((todo) => todo.todoId !== todoId)
       })
+      
     } catch {
       alert('Todo deletion failed')
     }
   }
 
   onTodoCheck = async (pos: number) => {
+    console.log('pos: ', pos)
+    const notify = () => toast.success('🎉 congratulation 🎉', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
     try {
       const todo = this.state.todos[pos]
+      console.log('todo: ', !todo.done)
       await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
         name: todo.name,
         dueDate: todo.dueDate,
         done: !todo.done
       })
+      await notify()
+      console.log('here1')
       this.setState({
         todos: update(this.state.todos, {
           [pos]: { done: { $set: !todo.done } }
         })
       })
+      console.log('here2')
     } catch {
       alert('Todo deletion failed')
     }
@@ -104,9 +146,11 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   render() {
     return (
       <div>
-        <Header as="h1">TODOs</Header>
-
+        <Header as="h1" style={{ color: 'white' }}>
+          TODOs
+        </Header>
         {this.renderCreateTodoInput()}
+        {/* {this.searchTodoItem()} */}
 
         {this.renderTodos()}
       </div>
@@ -142,6 +186,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     if (this.state.loadingTodos) {
       return this.renderLoading()
     }
+    console.log('get data')
 
     return this.renderTodosList()
   }
@@ -161,44 +206,72 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       <Grid padded>
         {this.state.todos.map((todo, pos) => {
           return (
-            <Grid.Row key={todo.todoId}>
-              <Grid.Column width={1} verticalAlign="middle">
-                <Checkbox
-                  onChange={() => this.onTodoCheck(pos)}
-                  checked={todo.done}
-                />
-              </Grid.Column>
-              <Grid.Column width={10} verticalAlign="middle">
-                {todo.name}
-              </Grid.Column>
-              <Grid.Column width={3} floated="right">
-                {todo.dueDate}
-              </Grid.Column>
-              <Grid.Column width={1} floated="right">
-                <Button
-                  icon
-                  color="blue"
-                  onClick={() => this.onEditButtonClick(todo.todoId)}
-                >
-                  <Icon name="pencil" />
-                </Button>
-              </Grid.Column>
-              <Grid.Column width={1} floated="right">
-                <Button
-                  icon
-                  color="red"
-                  onClick={() => this.onTodoDelete(todo.todoId)}
-                >
-                  <Icon name="delete" />
-                </Button>
-              </Grid.Column>
-              {todo.attachmentUrl && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
-              )}
-              <Grid.Column width={16}>
-                <Divider />
-              </Grid.Column>
-            </Grid.Row>
+            <Grid key={todo.todoId} id="displayTodo">
+              <div
+                className="card cardBeauty"
+                style={{
+                  backgroundColor: todo.done ? '#85FFBD' : 'white',
+                  backgroundImage: todo.done
+                    ? 'linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)'
+                    : '',
+                  borderRadius: '3%',
+                  height: '250px'
+                }}
+              >
+                {todo.attachmentUrl && (
+                  <>
+                    <img
+                      src={todo.attachmentUrl}
+                      alt="images"
+                      id="imageItem"
+                      style={{ height: '120px' }}
+                    />
+                  </>
+                )}
+                <div className="card-body">
+                  <h5 className="card-title">{todo.dueDate}</h5>
+                  <div className="card-text">
+                    <Checkbox
+                      onChange={() => this.onTodoCheck(pos)}
+                      checked={todo.done}
+                      style={{ marginRight: '10px' }}
+                    />
+                    {todo.name}
+                  <ToastContainer />
+
+                  </div>
+                  {/* <a href="#" className="btn btn-primary"></a> */}
+                  <Button
+                    icon
+                    color="blue"
+                    onClick={() => this.onEditButtonClick(todo.todoId)}
+                  >
+                    <Icon name="pencil" />
+                  </Button>
+                  <Button
+                    icon
+                    color="red"
+                    onClick={() => this.onTodoDelete(todo.todoId)}
+                  >
+                    <Icon name="delete" />
+                  </Button>
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                  />
+                  {/* Same as */}
+                  <ToastContainer />
+                </div>
+              </div>
+            </Grid>
           )
         })}
       </Grid>

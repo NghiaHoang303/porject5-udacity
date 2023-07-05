@@ -14,7 +14,6 @@ export const handler =middy (async (event: APIGatewayProxyEvent): Promise<APIGat
 
     const todoId = event.pathParameters.todoId;
     const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
-
     const toDoItem = await updateToDo(updatedTodo, todoId, jwtToken);
     const result = {
         statusCode: 200,

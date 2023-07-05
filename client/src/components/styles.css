@@ -1,0 +1,29 @@
+.cardBeauty {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    height: 300px;
+    padding-top: 10px;
+    text-align-last: center;
+    margin-right: 30px;
+    width: 260px;
+  
+}
+
+.ui.grid>.ui.grid:first-child {
+    padding-top: 1rem;
+    padding-bottom: 30px;
+}
+
+.loginForm {
+    text-align-last: center;
+}
+
+.uploadBtn {
+    color: white;
+    background-color: #6ccf8e !important;
+    background-image: linear-gradient(135deg, #afe1c1 0%, #38cc6c 100%) !important  ;
+}
+.uploadBtn:hover {
+    animation-duration: 0.3s;
+    background-color: #26cd60 !important;
+    background-image: linear-gradient(135deg, #0bd953 0%, #9ce3b5 100%) !important  ;
+}

@@ -1,24 +1,25 @@
 import { TodoItem } from '../models/TodoItem'
-import { parseUserId } from '../auth/utils'
+// import { parseUserId } from '../auth/utils'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 import { AllToDoAccess } from '../dataLayer/AllToDoAccess'
 
-const uuidv4 = require('uuid/v4')
+import * as uuid from 'uuid';
 const allToDoAccess = new AllToDoAccess()
 
 export function createToDo(
     createTodoRequest: CreateTodoRequest,
-    jwtToken: string
+    // jwtToken: string,
+    userId: string
   ): Promise<TodoItem> {
-    const userId = parseUserId(jwtToken)
-    const todoId = uuidv4()
-    const s3BucketName = process.env.ATTACHMENT_S3_BUCKET_VALUE
-    const urlAttachment = `https://${s3BucketName}.s3.amazonaws.com/${todoId}`
+    // const userId = parseUserId(jwtToken)
+    const todoId = uuid()
+    // const s3BucketName = process.env.ATTACHMENT_S3_BUCKET_VALUE
+    // const urlAttachment = ``
     return allToDoAccess.createToDo({
       userId: userId,
       todoId: todoId,
       createdAt: new Date().getTime().toString(),
-      attachmentUrl: urlAttachment,
+      attachmentUrl: null,
       done: false,
       ...createTodoRequest
     })

@@ -52,7 +52,8 @@ export class EditTodo extends React.PureComponent<
 
       this.setUploadState(UploadState.FetchingPresignedUrl)
       const uploadUrl = await getUploadUrl(this.props.auth.getIdToken(), this.props.match.params.todoId)
-
+      console.log("this.props.match.params: ", this.props)
+      console.log("uploadUrl: ", uploadUrl, this.state.file)
       this.setUploadState(UploadState.UploadingFile)
       await uploadFile(uploadUrl, this.state.file)
 
@@ -73,11 +74,11 @@ export class EditTodo extends React.PureComponent<
   render() {
     return (
       <div>
-        <h1>Upload new image</h1>
+        <h1 style={{color: "white"}}>Upload new image</h1>
 
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
-            <label>File</label>
+            <label style={{color: "white"}}>File</label>
             <input
               type="file"
               accept="image/*"
@@ -85,7 +86,6 @@ export class EditTodo extends React.PureComponent<
               onChange={this.handleFileChange}
             />
           </Form.Field>
-
           {this.renderButton()}
         </Form>
       </div>
@@ -101,6 +101,7 @@ export class EditTodo extends React.PureComponent<
         <Button
           loading={this.state.uploadState !== UploadState.NoUpload}
           type="submit"
+          className='uploadBtn'
         >
           Upload
         </Button>

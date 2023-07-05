@@ -1,0 +1,14 @@
+.buttonLogin:hover {
+    background-color: #6ccf8e !important;
+background-image: linear-gradient(135deg, #afe1c1 0%, #38cc6c 100%) !important  ;
+transition-timing-function: ease;
+transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+}
+.buttonLogout:hover {
+    background-color: #f57d7d !important;
+    background-image: linear-gradient(135deg, #e1b1af 0%, #f33232 100%) !important  ;
+    transition-timing-function: ease;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    /* animation-duration: 0.5s; */
+}
